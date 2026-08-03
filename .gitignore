@@ -1,6 +1,9 @@
 # Data directory (XVECTOR_HOST_DATA_DIR default)
 data/
 
+# About Me.md
+About Me.md
+
 # Frontend
 xvector_web/node_modules/
 xvector_web/dist/
