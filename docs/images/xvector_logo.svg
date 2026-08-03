@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 96" role="img" aria-label="Xvector">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1677ff"/>
+      <stop offset="100%" stop-color="#0958d9"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="16" width="64" height="64" rx="14" fill="url(#g)"/>
+  <text x="40" y="58" text-anchor="middle" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="28" font-weight="700" fill="#fff">Xv</text>
+  <text x="92" y="58" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="42" font-weight="700" fill="#1677ff">Xvector</text>
+</svg>
