@@ -1,7 +1,7 @@
 <div align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/images/xvector_logo_dark.svg" />
-    <img src="docs/images/xvector_logo.svg" width="360" alt="Xvector logo" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/xvector_logo_dark.svg" />
+    <img src="https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/xvector_logo.svg" width="360" alt="Xvector logo" />
   </picture>
 </div>
 
@@ -108,31 +108,31 @@ Compose 服务 `xvector_web` 暴露 **19531**：静态前端 + Nginx 将浏览�
 
 登录：
 
-![登录页](docs/images/image_login.png)
+![登录页](https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/image_login.png)
 
 数据库列表与集群状态：
 
-![数据库列表](docs/images/image_databases.png)
+![数据库列表](https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/image_databases.png)
 
 Collection 列表（含加载状态）：
 
-![Collections 列表](docs/images/image_collections.png)
+![Collections 列表](https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/image_collections.png)
 
 Collection 详情 · Schema：
 
-![Schema](docs/images/image_collections_schema.png)
+![Schema](https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/image_collections_schema.png)
 
 Collection 详情 · 数据（Insert / Upsert / Delete）：
 
-![数据](docs/images/image_collections_data.png)
+![数据](https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/image_collections_data.png)
 
 Collection 详情 · 索引：
 
-![索引](docs/images/image_collections_index.png)
+![索引](https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/image_collections_index.png)
 
 Collection 详情 · 向量检索：
 
-![向量检索](docs/images/image_collections_vector_search.png)
+![向量检索](https://timioss3.oss-cn-beijing.aliyuncs.com/xvector/images/image_collections_vector_search.png)
 
 ## 环境变量（常用）
 
