@@ -1,0 +1,115 @@
+services:
+  gateway:
+    build: .
+    image: xvector:local
+    cpus: "0.25"
+    mem_limit: 256m
+    ports:
+      - "19530:19530"
+    environment:
+      XVECTOR_ROLE: gateway
+      XVECTOR_USERNAME: ${XVECTOR_USERNAME:-root}
+      XVECTOR_PASSWORD: ${XVECTOR_PASSWORD:-Xvector}
+      XVECTOR_DATA_DIR: /data
+      XVECTOR_HTTP_PORT: "19530"
+      XVECTOR_WRITER_URL: http://writer:18081
+      XVECTOR_READER_URL: http://reader:18082
+      XVECTOR_INTERNAL_TOKEN: ${XVECTOR_INTERNAL_TOKEN:-xvector-internal}
+      XVECTOR_LOG_LEVEL: ${XVECTOR_LOG_LEVEL:-INFO}
+      XVECTOR_OPENAPI_REFRESH_SECONDS: ${XVECTOR_OPENAPI_REFRESH_SECONDS:-60}
+      XVECTOR_OPENAPI_REFRESH_RETRIES: ${XVECTOR_OPENAPI_REFRESH_RETRIES:-3}
+      XVECTOR_OPENAPI_REFRESH_RETRY_INTERVAL_SECONDS: ${XVECTOR_OPENAPI_REFRESH_RETRY_INTERVAL_SECONDS:-1}
+      XVECTOR_OPENAPI_FETCH_TIMEOUT_SECONDS: ${XVECTOR_OPENAPI_FETCH_TIMEOUT_SECONDS:-5}
+      XVECTOR_DOCS_ENABLED: ${XVECTOR_DOCS_ENABLED:-true}
+      XVECTOR_REDOC_ENABLED: ${XVECTOR_REDOC_ENABLED:-false}
+      XVECTOR_OPENAPI_INCLUDE_INTERNAL: ${XVECTOR_OPENAPI_INCLUDE_INTERNAL:-false}
+      XVECTOR_ACCESS_LOG_ENABLED: ${XVECTOR_ACCESS_LOG_ENABLED:-true}
+    volumes:
+      - ${XVECTOR_HOST_DATA_DIR:-./data}:/data
+    depends_on:
+      writer:
+        condition: service_healthy
+      reader:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:19530/healthz"]
+      interval: 60s
+      timeout: 3s
+      retries: 6
+      start_period: 10s
+
+  writer:
+    build: .
+    image: xvector:local
+    cpus: "1.0"
+    mem_limit: 2g
+    environment:
+      XVECTOR_ROLE: writer
+      XVECTOR_USERNAME: ${XVECTOR_USERNAME:-root}
+      XVECTOR_PASSWORD: ${XVECTOR_PASSWORD:-Xvector}
+      XVECTOR_DATA_DIR: /data
+      XVECTOR_WRITER_PORT: "18081"
+      XVECTOR_READER_URL: http://reader:18082
+      XVECTOR_INTERNAL_TOKEN: ${XVECTOR_INTERNAL_TOKEN:-xvector-internal}
+      XVECTOR_LOG_LEVEL: ${XVECTOR_LOG_LEVEL:-INFO}
+      XVECTOR_PASSWORD_ITERATIONS: ${XVECTOR_PASSWORD_ITERATIONS:-200000}
+      XVECTOR_WRITER_DOCS_UI: ${XVECTOR_WRITER_DOCS_UI:-false}
+      XVECTOR_ACCESS_LOG_ENABLED: ${XVECTOR_ACCESS_LOG_ENABLED:-true}
+    volumes:
+      - ${XVECTOR_HOST_DATA_DIR:-./data}:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:18081/readyz"]
+      interval: 60s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  reader:
+    build: .
+    image: xvector:local
+    cpus: "0.75"
+    mem_limit: 1536m
+    environment:
+      XVECTOR_ROLE: reader
+      XVECTOR_USERNAME: ${XVECTOR_USERNAME:-root}
+      XVECTOR_PASSWORD: ${XVECTOR_PASSWORD:-Xvector}
+      XVECTOR_DATA_DIR: /data
+      XVECTOR_READER_PORT: "18082"
+      XVECTOR_WRITER_URL: http://writer:18081
+      XVECTOR_AUTO_LOAD: ${XVECTOR_AUTO_LOAD:-false}
+      XVECTOR_READER_REFRESH_SECONDS: ${XVECTOR_READER_REFRESH_SECONDS:-10}
+      XVECTOR_META_REFRESH_SECONDS: ${XVECTOR_META_REFRESH_SECONDS:-10}
+      XVECTOR_INTERNAL_TOKEN: ${XVECTOR_INTERNAL_TOKEN:-xvector-internal}
+      XVECTOR_LOG_LEVEL: ${XVECTOR_LOG_LEVEL:-INFO}
+      XVECTOR_READER_DOCS_UI: ${XVECTOR_READER_DOCS_UI:-false}
+      XVECTOR_ACCESS_LOG_ENABLED: ${XVECTOR_ACCESS_LOG_ENABLED:-true}
+    volumes:
+      - ${XVECTOR_HOST_DATA_DIR:-./data}:/data
+    depends_on:
+      writer:
+        condition: service_healthy
+    healthcheck:
+      # Require meta open so gateway does not accept traffic before reader is usable.
+      test: ["CMD", "curl", "-f", "http://localhost:18082/readyz"]
+      interval: 60s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  xvector_web:
+    build:
+      context: ./xvector_web
+    image: xvector-web:local
+    cpus: "0.25"
+    mem_limit: 256m
+    ports:
+      - "19531:80"
+    depends_on:
+      gateway:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 3s
+      retries: 6
+      start_period: 10s

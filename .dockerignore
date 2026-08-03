@@ -1,0 +1,13 @@
+.git
+.pytest_cache
+__pycache__
+*.pyc
+.env
+.data
+.e2e-data
+*.egg-info
+.venv
+venv
+docs
+TODO-List.md
+agent-transcripts
